@@ -22,13 +22,6 @@ El análisis se basa en datos del **Índice de Desempeño Fiscal (IDF)** y el **
 1. Abre el archivo `Informe.html` directamente en un navegador web para ver el análisis interactivo.
 2. También puedes ejecutar el archivo `.qmd` en **Quarto** para generar un nuevo archivo HTML.
 
-## Fuentes de Datos
-
-- **Departamento Administrativo Nacional de Estadística (DANE)**: *Índice de Pobreza Multidimensional por municipio (Censo Nacional de Población y Vivienda 2018)*. [Microdatos DANE](https://microdatos.dane.gov.co/index.php/catalog/860/get-microdata)
-- **Ministerio de Hacienda y Crédito Público**: *Índice de Desempeño Fiscal*. [Datos del Gobierno](https://www.datos.gov.co/)
-- **Departamento Nacional de Planeación (DNP)**: *Índice de Desarrollo Humano Municipal (IDH-M)*. [Datos Abiertos DNP](https://www.datos.gov.co)
-- **Laboratorio Urbano Bogotá**: *Shapefile municipios de Boyacá en formato GeoJSON*. [Datos Abiertos - Laburbano](https://bogota-laburbano.opendatasoft.com/explore/dataset/shapes/)
-- **R Core Team**: *R: A language and environment for statistical computing*. [R Project](https://www.R-project.org/)
 
 ## Nota sobre el uso de Inteligencia Artificial
 
