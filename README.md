@@ -23,10 +23,6 @@ El análisis se basa en datos del **Índice de Desempeño Fiscal (IDF)** y el **
 2. También puedes ejecutar el archivo `.qmd` en **Quarto** para generar un nuevo archivo HTML.
 
 
-## Nota sobre el uso de Inteligencia Artificial
-
-Parte del contenido fue revisado, estructurado y redactado con el apoyo de **inteligencia artificial (ChatGPT)** para garantizar coherencia técnica, ortográfica y metodológica, respetando siempre la autoría y responsabilidad académica del equipo de trabajo.
-
 ## Cómo Ejecutar el Código
 
 1. **Instalar R y Quarto** en tu computadora.
