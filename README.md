@@ -1,2 +1,43 @@
-# An-lisis-Geoespacial-de-Indicadores-de-Desarrollo-Territorial-en-Boyac-Colombia-en-R
-Este informe académico titulado "Análisis Geoespacial de Indicadores de Desarrollo Territorial en Boyacá (Colombia)" tiene como objetivo principal examinar la distribución espacial de variables clave de desarrollo en los municipios del departamento de Boyacá, a partir de datos abiertos y herramientas reproducibles en R.  
+# Análisis de Desempeño Fiscal y Pobreza en los Municipios de Boyacá
+
+Este proyecto realiza un análisis del **desempeño fiscal** y el **índice de pobreza multidimensional (IPM)** de los municipios del **departamento de Boyacá, Colombia**, para el año **2020**. El objetivo es visualizar y analizar las relaciones entre el desempeño fiscal de los municipios y su nivel de pobreza, utilizando diversas fuentes de datos oficiales.
+
+## Descripción
+
+El análisis se basa en datos del **Índice de Desempeño Fiscal (IDF)** y el **Índice de Pobreza Multidimensional (IPM)**, así como otros indicadores relevantes proporcionados por fuentes como el **Departamento Administrativo Nacional de Estadística (DANE)** y el **Ministerio de Hacienda y Crédito Público**. Se han utilizado herramientas como **R**, **Quarto**, y **tmap** para la visualización de los resultados.
+
+### Objetivos del Proyecto:
+
+1. Visualizar la distribución del **Índice de Pobreza Multidimensional (IPM)** en los municipios de Boyacá.
+2. Analizar el **Índice de Desempeño Fiscal (IDF)** de los municipios para identificar áreas de mejora fiscal.
+3. Comparar el **IDF** y el **IPM** a través de diversas visualizaciones gráficas.
+4. Crear mapas coropléticos para representar visualmente el desempeño fiscal y la pobreza en el departamento.
+
+## Archivos Incluidos
+
+- **`Taller final grupal 04.qmd`**: El archivo Quarto que contiene el código, análisis y visualizaciones.
+- **`Informe.html`**: El archivo HTML autocontenido con los resultados del análisis, que se puede ver sin necesidad de tener R instalado.
+- **Datos**: Los archivos de datos utilizados en este análisis están incluidos en el repositorio.
+
+## Cómo Ver el Informe
+
+1. Abre el archivo `Informe.html` directamente en un navegador web para ver el análisis interactivo.
+2. También puedes ejecutar el archivo `.qmd` en **Quarto** para generar un nuevo archivo HTML.
+
+## Fuentes de Datos
+
+- **Departamento Administrativo Nacional de Estadística (DANE)**: *Índice de Pobreza Multidimensional por municipio (Censo Nacional de Población y Vivienda 2018)*. [Microdatos DANE](https://microdatos.dane.gov.co/index.php/catalog/860/get-microdata)
+- **Ministerio de Hacienda y Crédito Público**: *Índice de Desempeño Fiscal*. [Datos del Gobierno](https://www.datos.gov.co/)
+- **Departamento Nacional de Planeación (DNP)**: *Índice de Desarrollo Humano Municipal (IDH-M)*. [Datos Abiertos DNP](https://www.datos.gov.co)
+- **Laboratorio Urbano Bogotá**: *Shapefile municipios de Boyacá en formato GeoJSON*. [Datos Abiertos - Laburbano](https://bogota-laburbano.opendatasoft.com/explore/dataset/shapes/)
+- **R Core Team**: *R: A language and environment for statistical computing*. [R Project](https://www.R-project.org/)
+
+## Nota sobre el uso de Inteligencia Artificial
+
+Parte del contenido fue revisado, estructurado y redactado con el apoyo de **inteligencia artificial (ChatGPT)** para garantizar coherencia técnica, ortográfica y metodológica, respetando siempre la autoría y responsabilidad académica del equipo de trabajo.
+
+## Cómo Ejecutar el Código
+
+1. **Instalar R y Quarto** en tu computadora.
+2. **Clonar este repositorio** o descargar los archivos necesarios.
+3. **Ejecutar el archivo `.qmd`** en Quarto para generar el archivo HTML con los resultados.
