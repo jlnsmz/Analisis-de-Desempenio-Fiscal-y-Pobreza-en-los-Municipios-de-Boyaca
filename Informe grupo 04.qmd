@@ -461,6 +461,38 @@ El mapa presentado ilustra la distancia geodésica en kilómetros desde cada mun
 
 Esta variable permite observar patrones de accesibilidad territorial que pueden influir en la distribución de servicios, inversiones, presencia institucional y calidad de vida. En zonas rurales o más alejadas, estas distancias físicas pueden traducirse en barreras para el acceso a educación superior, salud especializada o programas gubernamentales. Por tanto, el análisis geográfico no solo es descriptivo, sino que ofrece insumos estratégicos para la planificación regional y la descentralización efectiva de políticas públicas.
 
+## Interpretación de los resultados
+
+El análisis geoespacial de los municipios de Boyacá evidencia marcadas desigualdades territoriales que reflejan las brechas estructurales persistentes en el departamento. En cuanto al Índice de Pobreza Multidimensional (IPM), se identifican niveles significativamente más altos en zonas rurales dispersas, especialmente al norte y oriente del territorio, mientras que las cabeceras municipales presentan mejores condiciones, aunque no exentas de heterogeneidad interna.
+
+El Índice de Desempeño Fiscal (IDF), por su parte, muestra una mayor concentración de municipios en condición de riesgo fiscal. A pesar de que algunos municipios presentan una buena gestión financiera, no se observa una correlación clara entre desempeño fiscal y pobreza multidimensional, lo que sugiere que estas dimensiones operan de forma parcialmente independiente, influenciadas por múltiples factores sociales, institucionales y políticos.
+
+Respecto a la distancia geográfica a Tunja, se constata que los municipios más alejados tienden a coincidir con mayores niveles de pobreza y menor desempeño fiscal. Esta relación no es estrictamente causal, pero sí indica un patrón territorial donde el acceso físico a la capital puede condicionar las oportunidades institucionales, administrativas y de inversión pública.
+
+## Conclusiones
+
+-    Boyacá presenta disparidades espaciales relevantes en pobreza, desempeño fiscal y accesibilidad territorial.
+
+-    Las zonas rurales y periféricas enfrentan los mayores retos en términos de condiciones de vida y gestión institucional.
+
+-    Las cabeceras municipales concentran mejores indicadores, pero requieren intervenciones diferenciadas para cerrar brechas internas.
+
+-    No se evidenció una relación lineal entre IDF e IPM, lo que sugiere que el buen manejo financiero municipal no garantiza por sí solo mejores condiciones sociales.
+
+-    La distancia geográfica a Tunja actúa como proxy indirecto de accesibilidad a recursos y servicios, afectando especialmente a municipios más aislados.
+
+## Recomendaciones
+
+-    Diseñar estrategias de política pública que reconozcan la heterogeneidad territorial de Boyacá, con enfoques diferenciados según el perfil geoespacial de los municipios.
+
+-    Fortalecer la capacidad institucional de municipios con bajo desempeño fiscal a través de asistencia técnica, auditorías preventivas y modernización administrativa.
+
+-    Enfocar inversiones sociales y de infraestructura en zonas rurales dispersas, priorizando indicadores de acceso básico (educación, salud, conectividad vial).
+
+-    Incorporar análisis geoespacial en los procesos de planificación territorial del departamento y en la asignación presupuestal sectorial.
+
+-    Promover investigaciones adicionales que integren otras dimensiones como el capital humano, productividad local o indicadores ambientales, para complementar el análisis territorial integral.
+
 ## Referencias
 
 1.  Mapas para Colorear. (s.f.). *Mapa del Departamento de Boyacá*. Recuperado de <https://www.mapasparacolorear.com/colombia/mapa-departamento-boyaca.php>
