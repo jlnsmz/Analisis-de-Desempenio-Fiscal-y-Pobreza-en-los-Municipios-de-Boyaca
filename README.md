@@ -1,7 +1,5 @@
 # Análisis de Desempeño Fiscal y Pobreza en los Municipios de Boyacá
 
-Este proyecto realiza un análisis del **desempeño fiscal** y el **índice de pobreza multidimensional (IPM)** de los municipios del **departamento de Boyacá, Colombia**, para el año **2020**. El objetivo es visualizar y analizar las relaciones entre el desempeño fiscal de los municipios y su nivel de pobreza, utilizando diversas fuentes de datos oficiales.
-
 ## Descripción
 
 El análisis se basa en datos del **Índice de Desempeño Fiscal (IDF)** y el **Índice de Pobreza Multidimensional (IPM)**, así como otros indicadores relevantes proporcionados por fuentes como el **Departamento Administrativo Nacional de Estadística (DANE)** y el **Ministerio de Hacienda y Crédito Público**. Se han utilizado herramientas como **R**, **Quarto**, y **tmap** para la visualización de los resultados.
