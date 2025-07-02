@@ -19,7 +19,7 @@ El análisis se basa en datos del **Índice de Desempeño Fiscal (IDF)** y el **
 
 ## Archivos Incluidos
 
-- **`Taller final - grupo 04.qmd`**: El archivo Quarto que contiene el código, análisis y visualizaciones.
+- **`Informe grupo 04.qmd`**: El archivo Quarto que contiene el código, análisis y visualizaciones.
 - **`Informe.html`**: El archivo HTML autocontenido con los resultados del análisis, que se puede ver sin necesidad de tener R instalado.
 - **Datos**: Los archivos de datos utilizados en este análisis están incluidos en el repositorio.
 
