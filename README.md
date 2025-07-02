@@ -1,6 +1,6 @@
 # Análisis de Desempeño Fiscal y Pobreza en los Municipios de Boyacá
 
-## Integrantes
+## Integrantes - Grupo 04
 
 - Julián Orrego Martínes
 - Luna Manuela Montes Cantero
