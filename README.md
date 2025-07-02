@@ -1,0 +1,2 @@
+# An-lisis-Geoespacial-de-Indicadores-de-Desarrollo-Territorial-en-Boyac-Colombia-en-R
+Este informe académico titulado "Análisis Geoespacial de Indicadores de Desarrollo Territorial en Boyacá (Colombia)" tiene como objetivo principal examinar la distribución espacial de variables clave de desarrollo en los municipios del departamento de Boyacá, a partir de datos abiertos y herramientas reproducibles en R.  
