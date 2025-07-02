@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.29">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Luna Manuela Montes Cantero">
+<meta name="author" content="Julián Orrego Martínez">
+<meta name="author" content="Nilson Lopera Machado">
+
+<title>Análisis Geoespacial de Indicadores de Desarrollo Territorial en Boyacá (Colombia)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Informe grupo 04_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Informe grupo 04_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Informe grupo 04_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Informe grupo 04_files/libs/quarto-html/popper.min.js"></script>
+<script src="Informe grupo 04_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Informe grupo 04_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Informe grupo 04_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Informe grupo 04_files/libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Informe grupo 04_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Informe grupo 04_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Informe grupo 04_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Análisis Geoespacial de Indicadores de Desarrollo Territorial en Boyacá (Colombia)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autores/as</div>
+    <div class="quarto-title-meta-contents">
+             <p>Luna Manuela Montes Cantero </p>
+             <p>Julián Orrego Martínez </p>
+             <p>Nilson Lopera Machado </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de publicación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">1 de julio de 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Resumen</div>
+    <p>Este informe académico titulado “Análisis Geoespacial de Indicadores de Desarrollo Territorial en Boyacá (Colombia)” tiene como objetivo principal examinar la distribución espacial de variables clave de desarrollo en los municipios del departamento de Boyacá, a partir de datos abiertos y herramientas reproducibles en R.</p>
+  </div>
+</div>
+
+
+</header>
+
+
+<section id="objetivos" class="level2">
+<h2 class="anchored" data-anchor-id="objetivos">Objetivos</h2>
+<ul>
+<li>Analizar la distribución territorial del IPM, IDF y distancia en relación de la capital en Boyacá.</li>
+<li>Evaluar las relaciones espaciales entre desempeño fiscal, pobreza y desarrollo humano.</li>
+<li>Visualizar los patrones territoriales mediante mapas coropléticos reproducibles.</li>
+<li>Proponer recomendaciones de política territorial basadas en evidencia.</li>
+</ul>
+</section>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>El departamento de Boyacá, situado en el corazón de la región andina colombiana, constituye un territorio de contrastes sociales, económicos e institucionales. A pesar de albergar importantes polos urbanos como Tunja, Duitama y Sogamoso, muchos de sus municipios rurales enfrentan desafíos estructurales, lo que dificulta el acceso equitativo a servicios y condiciones de vida adecuadas alrededor de sus 123 municipios.</p>
+<p>Este estudio tiene como objetivo examinar de manera sistemática la heterogeneidad de Boyacá en el 2024, a través del análisis de dos indicadores clave: el <strong>Índice de Pobreza Multidimensional (IPM)</strong>, el <strong>Índice de Desempeño Fiscal (IDF)</strong>. A través de técnicas de visualización geoespacial y análisis exploratorio con R, se busca no solo caracterizar las disparidades internas del departamento, sino también aportar insumos para políticas orientadas a reducir las brechas y fortalecer la cohesión regional.</p>
+</section>
+<section id="metodología" class="level2">
+<h2 class="anchored" data-anchor-id="metodología">Metodología</h2>
+<p>Los datos utilizados provienen de fuentes oficiales como el <strong>DANE</strong>, <strong>DNP</strong>, <strong>Ministerio de Hacienda</strong> y la plataforma <a href="datos.gov.co">datos.gov.co</a>, garantizando la trazabilidad y legalidad del uso de la información. Para el procesamiento de los datos se utilizaron herramientas del lenguaje R, en particular los paquetes <code>tidyverse</code>, <code>sf</code>, <code>readxl</code>, <code>geosphere</code>, <code>writexl</code> y <code>tmap</code>.</p>
+<p>Para cumplir con los objetivos del estudio, se aplicaron los siguientes métodos técnicos y analíticos:</p>
+<ul>
+<li><strong>Limpieza y estandarización de datos</strong>: Se depuraron y normalizaron las variables de cada fuente , eliminando valores faltantes y estandarizando nombres de municipios y formatos numéricos.</li>
+</ul>
+<!-- -->
+<ul>
+<li><strong>Integración de bases de datos</strong>: Se unieron los conjuntos de datos del <strong>IPM</strong> y <strong>IDF</strong> con la base geoespacial de municipios de Boyacá, garantizando la integridad territorial del análisis.</li>
+</ul>
+<!-- -->
+<ul>
+<li><strong>Conversión geoespacial</strong>: Los datos fueron convertidos a objetos <strong>sf</strong> para facilitar el análisis y la visualización geográfica.</li>
+</ul>
+<!-- -->
+<ul>
+<li><strong>Análisis exploratorio</strong>: Se generaron tablas de resumen y estadísticas descriptivas de los indicadores, evaluando su distribución y rango.</li>
+</ul>
+<!-- -->
+<ul>
+<li><strong>Visualización temática</strong>: Se diseñaron mapas coropléticos con <strong>tmap</strong>, permitiendo identificar patrones espaciales de los indicadores mediante escalas de color.</li>
+</ul>
+</section>
+<section id="mapa-de-municipios-de-boyacá" class="level2">
+<h2 class="anchored" data-anchor-id="mapa-de-municipios-de-boyacá">Mapa de municipios de Boyacá</h2>
+<p><img src="images/clipboard-2616680237.png" class="img-fluid"></p>
+<p><em>Imagen extraída de: <a href="https://www.mapasparacolorear.com/colombia/mapa-departamento-boyaca.php">Mapas del departamento de Boyacá para colorear</a></em></p>
+<section id="mapa-de-municipios-de-boyacá-en-geojson" class="level3">
+<h3 class="anchored" data-anchor-id="mapa-de-municipios-de-boyacá-en-geojson">Mapa de municipios de Boyacá en GeoJSON</h3>
+<p>Con el objetivo de garantizar la reproducibilidad y estandarización de los análisis geoespaciales, se adopta por convención un archivo en formato GeoJSON que representa los límites municipales del departamento de Boyacá. Esta capa geográfica servirá como base cartográfica para la generación de todos los mapas temáticos incluidos en el documento, asegurando así la coherencia visual y territorial en la representación de los distintos indicadores.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Archivo extraído de:</em> <a href="https://bogota-laburbano.opendatasoft.com/explore/dataset/shapes/export/?refine.nombre_dpt=BOYACA"><em>Laboratorio urbano Bogotá</em></a></p>
+</section>
+</section>
+<section id="índice-de-pobreza-multidimensional-ipm" class="level2">
+<h2 class="anchored" data-anchor-id="índice-de-pobreza-multidimensional-ipm">Índice de Pobreza Multidimensional (IPM)</h2>
+<p>El Índice de Pobreza Multidimensional (IPM) es una medida integral que captura la pobreza más allá del ingreso. Desarrollado por el Departamento Administrativo Nacional de Estadística (DANE), el IPM considera varias dimensiones del bienestar, tales como la salud, la educación, y las condiciones de vivienda.</p>
+<p>En este caso en particular, se usaron datos del IPM del año 2024, que se pueden encontrar <a href="https://microdatos.dane.gov.co/index.php/catalog/860/get-microdata"><em>aquí</em></a></p>
+<section id="desglose-del-ipm-en-boyacá" class="level3">
+<h3 class="anchored" data-anchor-id="desglose-del-ipm-en-boyacá">Desglose del IPM en Boyacá:</h3>
+<p>El <strong>I</strong>PM en Boyacá se divide en tres grandes categorías:</p>
+<ul>
+<li><p><strong>Total</strong>: Incluye todos los municipios de Boyacá, abarcando tanto las áreas urbanas como rurales.</p></li>
+<li><p><strong>Cabeceras Municipales</strong>: Refleja el índice de pobreza solo para los centros urbanos o cabeceras municipales de Boyacá, donde generalmente se tiene un mayor acceso a servicios.</p></li>
+<li><p><strong>Centros Poblados y Rural Disperso</strong>: Considera las zonas rurales del departamento, que suelen enfrentar mayores desafíos en términos de acceso a servicios y calidad de vida</p></li>
+</ul>
+<p>A continuación una visualización</p>
+</section>
+<section id="ipm-total" class="level3">
+<h3 class="anchored" data-anchor-id="ipm-total">IPM TOTAL</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Los municipios de norte y occidente de Boyacá presentan los valores más altos de IPM, indicando una pobreza multidimensional significativa en estas zona, mientras que el sur y centro de Boyacá tiene una mayor concentración de municipios con valores bajos de IPM, reflejando mejores condiciones en términos de acceso a servicios básicos.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El histograma muestra una distribución relativamente equilibrada de los municipios de Boyacá, con picos que reflejan valores de pobreza media (30 a 40) y una pequeña cantidad de municipios con valores más bajos o más altos. Esto indica que gran parte de los municipios en Boyacá tienen un nivel de pobreza multidimensional moderado, con algunas zonas en los extremos con mayores y menores niveles de pobreza.</p>
+</section>
+<section id="ipm-cabeceras" class="level3">
+<h3 class="anchored" data-anchor-id="ipm-cabeceras"><strong>IPM CABECERAS</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Los municipios cabeceras tienen un IPM más bajo en comparación con las áreas rurales, lo que indica que las zonas urbanas de Boyacá tienen mejores condiciones de vida. Sin embargo, hay algunas cabeceras con valores relativamente altos, especialmente en el centro y el norte de Boyacá, por ejemplo los municipios más cercanos a Tunja (la capital) tienden a tener mejores condiciones (IPM entre 5-15).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se muestra una distribución más concentrada en valores medios de pobreza (10 a 25), con una ligera tendencia hacia los valores más bajos. Esto sugiere que las zonas urbanas de Boyacá tienen mejores condiciones de vida, aunque aún persisten diferencias significativas entre los municipios más desarrollados y los menos favorecidos dentro de las cabeceras.</p>
+</section>
+<section id="ipm-centros-poblados-y-rural-disperso" class="level3">
+<h3 class="anchored" data-anchor-id="ipm-centros-poblados-y-rural-disperso"><strong>IPM CENTROS POBLADOS Y RURAL DISPERSO</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Las áreas más rurales y dispersas de Boyacá tienen los valores más altos de IPM, con muchos municipios que se encuentran en el rango de 40 a 60 e incluso 80 a 100 en algunas zonas del norte y este, también tenemos que el IPM más alto está asociado con zonas rurales más alejadas, donde el acceso a servicios como salud, educación y agua potable es más limitado.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El histograma del IPM en Centros Poblados y Rural Disperso revela una concentración de municipios con un IPM alto, especialmente entre 40 y 60. Las áreas rurales de Boyacá muestran una distribución de pobreza más alta, lo que refleja las dificultades que enfrentan las zonas rurales en términos de acceso a servicios básicos, lo que contribuye a niveles más altos de pobreza multidimensional en comparación con las áreas urbanas.</p>
+</section>
+<section id="analisis-del-ipm" class="level3">
+<h3 class="anchored" data-anchor-id="analisis-del-ipm">Analisis del IPM:</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El gráfico muestra claramente que en Boyacá existen grandes desigualdades en términos de pobreza multidimensional, con las zonas rurales enfrentando niveles significativamente más altos de pobreza <strong>(IPM Rural: 44.71)</strong> en comparación con las cabeceras municipales <strong>(IPM Cabeceras: (18.91)</strong>. Aunque las áreas urbanas tienen mejores condiciones, el <strong>(IPM Total para el departamento: 38.13)</strong> refleja que, a pesar de los avances en las zonas urbanas, la pobreza sigue siendo un desafío importante en todo el territorio. Estas disparidades subrayan la necesidad de políticas públicas enfocadas en mejorar las condiciones de vida en las áreas rurales.</p>
+<section id="conclusiones-generales-del-ipm" class="level4">
+<h4 class="anchored" data-anchor-id="conclusiones-generales-del-ipm"><strong>Conclusiones generales del IPM:</strong></h4>
+<ul>
+<li>Boyacá presenta una gran disparidad territorial en términos de pobreza multidimensional, con las zonas rurales y periféricas enfrentando mayores desafíos.</li>
+</ul>
+<!-- -->
+<ul>
+<li>Las cabeceras municipales muestran mejores condiciones, pero aún existen desigualdades internas dentro de ellas.</li>
+</ul>
+<!-- -->
+<ul>
+<li>Las áreas rurales dispersas requieren políticas públicas más focalizadas para reducir la pobreza y mejorar la calidad de vida a través del acceso a servicios básicos y la mejora de infraestructuras.</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="índice-de-desempeño-fiscal-idf" class="level2">
+<h2 class="anchored" data-anchor-id="índice-de-desempeño-fiscal-idf">Índice de Desempeño Fiscal (IDF)</h2>
+<p>El Índice de Desempeño Fiscal (IDF) es una herramienta que permite evaluar la gestión fiscal de los municipios, tomando en cuenta diversos factores que reflejan su capacidad de recaudar impuestos, gestionar los recursos públicos y mantener un nivel adecuado de solvencia fiscal. El IDF se utiliza para clasificar a los municipios en términos de su capacidad para manejar y administrar sus finanzas de manera eficiente.</p>
+<p>En este estudio, se presenta la distribución del Índice de Desempeño Fiscal (IDF) para los municipios de Boyacá durante el <strong>año 2020</strong>, con el objetivo de identificar patrones de desempeño fiscal en el departamento, y resaltar las áreas que requieren mayores esfuerzos de mejora.</p>
+<p>Los datos se pueden encontrar <a href="https://www.datos.gov.co/Funci-n-p-blica/Nuevo-ndice-de-Desempe-o-Fiscal-municipios-DEPARTA/m7gv-v3kk/about_data"><em>aquí</em></a></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Esta visualización revela importantes diferencias en la capacidad de los municipios para gestionar sus finanzas. Municipios en el sur y centro del departamento presentan buenos índices fiscales, reflejando una gestión adecuada de los recursos, mientras que algunos municipios en el norte muestran graves dificultades fiscales, lo que podría indicar limitaciones en su capacidad de recaudación o problemas en la gestión pública local.</p>
+<p>Este análisis es clave para diseñar políticas públicas dirigidas a mejorar la solvencia fiscal en los municipios con bajos índices, permitiendo mejorar la prestación de servicios como salud, educación e infraestructura en las áreas más vulnerables.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La mayoría de los municipios se encuentran clasificados en la categoría “Riesgo”, con un número significativo de municipios, lo que indica que estos municipios presentan dificultades fiscales importantes y podrían necesitar mejorar la gestión financiera para evitar problemas futuros.</p>
+<section id="comparación-entre-idf-e-ipm-en-boyacá" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-entre-idf-e-ipm-en-boyacá">Comparación entre IDF e IPM en Boyacá</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="análisis-del-gráfico" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-del-gráfico"><strong>Análisis del gráfico</strong>:</h4>
+<ul>
+<li><p><strong>Relación débil</strong>: No parece haber una relación clara entre el IDF y el IPM, ya que los puntos están distribuidos de manera aleatoria en el gráfico, sin una tendencia obvia. Es decir, no se observa una correlación fuerte entre el desempeño fiscal de los municipios y su nivel de pobreza multidimensional.</p></li>
+<li><p><strong>Variedad de municipios</strong>: Los municipios con alto IDF no necesariamente tienen un IPM bajo, lo que podría indicar que algunos municipios con bajo índice de pobreza aún tienen un desempeño fiscal limitado. De igual manera, algunos municipios con alto IPM pueden tener un desempeño fiscal relativamente bueno.</p></li>
+</ul>
+<p>El gráfico sugiere que el desempeño fiscal de los municipios no está directamente vinculado con su nivel de pobreza, lo que puede indicar que otros factores (como la gestión de los recursos o las políticas fiscales locales) también influyen de manera importante en el desempeño fiscal de los municipios.</p>
+</section>
+</section>
+</section>
+<section id="a-qué-tanta-distancia-están-los-municipios-de-boyacá-de-su-capital" class="level2">
+<h2 class="anchored" data-anchor-id="a-qué-tanta-distancia-están-los-municipios-de-boyacá-de-su-capital">¿A qué tanta distancia están los municipios de Boyacá de su capital?</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe-grupo-04_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Análisis de la distancia geográfica a la capital departamental</strong></p>
+<p>El mapa presentado ilustra la distancia geodésica en kilómetros desde cada municipio del departamento de Boyacá hasta su capital, Tunja. A través de una representación coroplética, se evidencian variaciones espaciales significativas: mientras que los municipios del centro y el eje tunjano presentan proximidad territorial a la capital, aquellos ubicados en los extremos oriental y occidental exhiben distancias considerablemente mayores.</p>
+<p>Esta variable permite observar patrones de accesibilidad territorial que pueden influir en la distribución de servicios, inversiones, presencia institucional y calidad de vida. En zonas rurales o más alejadas, estas distancias físicas pueden traducirse en barreras para el acceso a educación superior, salud especializada o programas gubernamentales. Por tanto, el análisis geográfico no solo es descriptivo, sino que ofrece insumos estratégicos para la planificación regional y la descentralización efectiva de políticas públicas.</p>
+</section>
+<section id="referencias" class="level2">
+<h2 class="anchored" data-anchor-id="referencias">Referencias</h2>
+<ol type="1">
+<li><p>Mapas para Colorear. (s.f.). <em>Mapa del Departamento de Boyacá</em>. Recuperado de <a href="https://www.mapasparacolorear.com/colombia/mapa-departamento-boyaca.php" class="uri">https://www.mapasparacolorear.com/colombia/mapa-departamento-boyaca.php</a></p></li>
+<li><p>Departamento Administrativo Nacional de Estadística (DANE). (2024). <em>Índice de Pobreza Multidimensional por municipio (Censo Nacional de Población y Vivienda 2018)</em>. Recuperado de <a href="https://microdatos.dane.gov.co/index.php/catalog/860/get-microdata" class="uri">https://microdatos.dane.gov.co/index.php/catalog/860/get-microdata</a></p></li>
+<li><p>Ministerio de Hacienda y Crédito Público. (2020). <em>Índice de Desempeño Fiscal</em>. Recuperado de <a href="https://www.datos.gov.co/" class="uri">https://www.datos.gov.co/</a></p></li>
+<li><p>Laboratorio Urbano Bogotá. (s.f.). <em>Shapefile municipios de Boyacá en formato GeoJSON</em>. Recuperado de <a href="https://bogota-laburbano.opendatasoft.com/explore/dataset/shapes/" class="uri">https://bogota-laburbano.opendatasoft.com/explore/dataset/shapes/</a></p></li>
+<li><p>R Core Team. (2024). <em>R: A language and environment for statistical computing</em>. R Foundation for Statistical Computing, Vienna, Austria. Recuperado de <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a></p></li>
+<li><p>Wickham, H., et al.&nbsp;(2019). Welcome to the Tidyverse. <em>Journal of Open Source Software, 4</em>(43), 1686.</p></li>
+<li><p>Pebesma, E. (2018). Simple Features for R: Standardized Support for Spatial Vector Data. <em>The R Journal, 10</em>(1), 439–446.</p></li>
+</ol>
+<section id="nota-sobre-uso-de-ia" class="level4">
+<h4 class="anchored" data-anchor-id="nota-sobre-uso-de-ia"><em><strong>Nota sobre uso de IA</strong>:</em></h4>
+<p>Parte del contenido fue revisado, estructurado y redactado con el apoyo de inteligencia artificial (ChatGPT) para garantizar coherencia técnica, ortográfica y metodológica, respetando siempre la autoría y responsabilidad académica del equipo de trabajo.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

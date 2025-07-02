@@ -1,0 +1,481 @@
+---
+title: "Análisis Geoespacial de Indicadores de Desarrollo Territorial en Boyacá (Colombia)"
+abstract: |
+ Este informe académico titulado "Análisis Geoespacial de Indicadores de Desarrollo Territorial en Boyacá (Colombia)" tiene como objetivo principal examinar la distribución espacial de variables clave de desarrollo en los municipios del departamento de Boyacá, a partir de datos abiertos y herramientas reproducibles en R.  
+
+lang: es
+author: 
+  - name: Luna Manuela Montes Cantero
+    id: 1040358432
+  - name: Julián Orrego Martínez
+    id: 1193436739
+  - name: Nilson Lopera Machado
+    id: 1038096925
+date: last-modified
+date-format: long
+format: 
+  html:
+    self_contained: true
+editor: source
+execute: 
+  echo: false
+  warning: false
+---
+
+## Objetivos
+
+-   Analizar la distribución territorial del IPM, IDF y distancia en relación de la capital en Boyacá.
+-   Evaluar las relaciones espaciales entre desempeño fiscal, pobreza y desarrollo humano.
+-   Visualizar los patrones territoriales mediante mapas coropléticos reproducibles.
+-   Proponer recomendaciones de política territorial basadas en evidencia.
+
+## Introducción
+
+El departamento de Boyacá, situado en el corazón de la región andina colombiana, constituye un territorio de contrastes sociales, económicos e institucionales. A pesar de albergar importantes polos urbanos como Tunja, Duitama y Sogamoso, muchos de sus municipios rurales enfrentan desafíos estructurales, lo que dificulta el acceso equitativo a servicios y condiciones de vida adecuadas alrededor de sus 123 municipios.
+
+Este estudio tiene como objetivo examinar de manera sistemática la heterogeneidad de Boyacá en el 2024, a través del análisis de dos indicadores clave: el **Índice de Pobreza Multidimensional (IPM)**, el **Índice de Desempeño Fiscal (IDF)**. A través de técnicas de visualización geoespacial y análisis exploratorio con R, se busca no solo caracterizar las disparidades internas del departamento, sino también aportar insumos para políticas orientadas a reducir las brechas y fortalecer la cohesión regional.
+
+## Metodología
+
+Los datos utilizados provienen de fuentes oficiales como el **DANE**, **DNP**, **Ministerio de Hacienda** y la plataforma [datos.gov.co](datos.gov.co), garantizando la trazabilidad y legalidad del uso de la información. Para el procesamiento de los datos se utilizaron herramientas del lenguaje R, en particular los paquetes `tidyverse`, `sf`, `readxl`, `geosphere`, `writexl` y `tmap`.
+
+Para cumplir con los objetivos del estudio, se aplicaron los siguientes métodos técnicos y analíticos:
+
+-   **Limpieza y estandarización de datos**: Se depuraron y normalizaron las variables de cada fuente , eliminando valores faltantes y estandarizando nombres de municipios y formatos numéricos.
+
+<!-- -->
+
+-   **Integración de bases de datos**: Se unieron los conjuntos de datos del **IPM** y **IDF** con la base geoespacial de municipios de Boyacá, garantizando la integridad territorial del análisis.
+
+<!-- -->
+
+-   **Conversión geoespacial**: Los datos fueron convertidos a objetos **sf** para facilitar el análisis y la visualización geográfica.
+
+<!-- -->
+
+-   **Análisis exploratorio**: Se generaron tablas de resumen y estadísticas descriptivas de los indicadores, evaluando su distribución y rango.
+
+<!-- -->
+
+-   **Visualización temática**: Se diseñaron mapas coropléticos con **tmap**, permitiendo identificar patrones espaciales de los indicadores mediante escalas de color.
+
+## Mapa de municipios de Boyacá
+
+![](images/clipboard-2616680237.png)
+
+*Imagen extraída de: [Mapas del departamento de Boyacá para colorear](https://www.mapasparacolorear.com/colombia/mapa-departamento-boyaca.php)*
+
+```{r}
+# =========================================================
+# Carga de paquetes y configuración general
+# =========================================================
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(sf)
+library(tmap)
+library(geosphere)
+library(writexl)
+
+options(scipen = 999)
+tmap_mode("plot")
+```
+
+```{r}
+#| include: false
+# Cargar el shapefile de Boyacá
+boyaca_municipios <- st_read("datos/Boyaca.geojson")
+
+# Ver los primeros registros de la capa
+head(boyaca_municipios)
+```
+
+### Mapa de municipios de Boyacá en GeoJSON
+
+Con el objetivo de garantizar la reproducibilidad y estandarización de los análisis geoespaciales, se adopta por convención un archivo en formato GeoJSON que representa los límites municipales del departamento de Boyacá. Esta capa geográfica servirá como base cartográfica para la generación de todos los mapas temáticos incluidos en el documento, asegurando así la coherencia visual y territorial en la representación de los distintos indicadores.
+
+```{r}
+# Graficar el mapa básico de Boyacá
+tm_shape(boyaca_municipios) +
+  tm_borders() +  # Mostrar los límites de los municipios
+  tm_layout(title = "Municipios de Boyacá")
+
+```
+
+*Archivo extraído de:* [*Laboratorio urbano Bogotá*](https://bogota-laburbano.opendatasoft.com/explore/dataset/shapes/export/?refine.nombre_dpt=BOYACA)
+
+## Índice de Pobreza Multidimensional (IPM)
+
+El Índice de Pobreza Multidimensional (IPM) es una medida integral que captura la pobreza más allá del ingreso. Desarrollado por el Departamento Administrativo Nacional de Estadística (DANE), el IPM considera varias dimensiones del bienestar, tales como la salud, la educación, y las condiciones de vivienda.
+
+En este caso en particular, se usaron datos del IPM del año 2024, que se pueden encontrar [*aquí*](https://microdatos.dane.gov.co/index.php/catalog/860/get-microdata)
+
+### Desglose del IPM en Boyacá:
+
+El **I**PM en Boyacá se divide en tres grandes categorías:
+
+-   **Total**: Incluye todos los municipios de Boyacá, abarcando tanto las áreas urbanas como rurales.
+
+-   **Cabeceras Municipales**: Refleja el índice de pobreza solo para los centros urbanos o cabeceras municipales de Boyacá, donde generalmente se tiene un mayor acceso a servicios.
+
+-   **Centros Poblados y Rural Disperso**: Considera las zonas rurales del departamento, que suelen enfrentar mayores desafíos en términos de acceso a servicios y calidad de vida
+
+A continuación una visualización
+
+```{r}
+#| message: false
+#| include: false
+# Leer la base de datos IPM de Boyacá
+boyaca_ipm_municipios <- read.csv("datos/boyaca_ipm_municipios.csv")
+
+# Verificar las primeras filas para asegurarse de que se cargó correctamente
+head(boyaca_ipm_municipios)
+```
+
+```{r}
+#| include: false
+# Convertir ambas columnas a tipo carácter para hacer la unión
+boyaca_municipios$mpios <- as.character(boyaca_municipios$mpios)
+boyaca_ipm_municipios$ID <- as.character(boyaca_ipm_municipios$ID)
+# Unir el shapefile con los datos IPM usando la columna 'mpios' del shapefile y 'ID' del CSV
+boyaca_municipios_ipm <- left_join(boyaca_municipios, boyaca_ipm_municipios, by = c("mpios" = "ID"))
+
+# Verificar la unión para asegurarnos de que los datos se hayan combinado correctamente
+head(boyaca_municipios_ipm)
+```
+
+### IPM TOTAL
+
+```{r}
+# Crear el mapa coloreado por 'IPM Municipal'
+tm_shape(boyaca_municipios_ipm) +
+  tm_fill("IPM.Municipal", palette = "Reds", title = "% IPM Municipal") +  # Colorear según IPM Municipal
+  tm_borders() +  # Mostrar los límites de los municipios
+  tm_layout(title = "Mapa de IPM Total en Boyacá")
+```
+
+Los municipios de norte y occidente de Boyacá presentan los valores más altos de IPM, indicando una pobreza multidimensional significativa en estas zona, mientras que el sur y centro de Boyacá tiene una mayor concentración de municipios con valores bajos de IPM, reflejando mejores condiciones en términos de acceso a servicios básicos.
+
+```{r}
+# Histograma de IPM Total
+ggplot(boyaca_municipios_ipm, aes(x = IPM.Municipal)) +
+  geom_histogram(binwidth = 5, fill = "lightcoral", color = "black", alpha = 0.7) +
+  labs(title = "Distribución del IPM Total en Boyacá",
+       x = "Índice de Pobreza Multidimensional (IPM) Total",
+       y = "Frecuencia") +
+  theme_minimal()
+```
+
+El histograma muestra una distribución relativamente equilibrada de los municipios de Boyacá, con picos que reflejan valores de pobreza media (30 a 40) y una pequeña cantidad de municipios con valores más bajos o más altos. Esto indica que gran parte de los municipios en Boyacá tienen un nivel de pobreza multidimensional moderado, con algunas zonas en los extremos con mayores y menores niveles de pobreza.
+
+### **IPM CABECERAS**
+
+```{r}
+# Crear el mapa coloreado por 'IPM Cabeceras' (para tmap v3)
+tm_shape(boyaca_municipios_ipm) +
+  tm_fill("Cabeceras", palette = "Blues", title = "% IPM Cabeceras") +  # Colorear según IPM Cabeceras
+  tm_borders() +  # Mostrar los límites de los municipios
+  tm_layout(title = "Mapa de IPM cabeceras en Boyacá")
+
+```
+
+Los municipios cabeceras tienen un IPM más bajo en comparación con las áreas rurales, lo que indica que las zonas urbanas de Boyacá tienen mejores condiciones de vida. Sin embargo, hay algunas cabeceras con valores relativamente altos, especialmente en el centro y el norte de Boyacá, por ejemplo los municipios más cercanos a Tunja (la capital) tienden a tener mejores condiciones (IPM entre 5-15).
+
+```{r}
+# Histograma de IPM en Cabeceras Municipales
+ggplot(boyaca_municipios_ipm, aes(x = Cabeceras)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(title = "Distribución del IPM en Cabeceras Municipales de Boyacá",
+       x = "Índice de Pobreza Multidimensional (IPM) en Cabeceras",
+       y = "Frecuencia") +
+  theme_minimal()
+```
+
+Se muestra una distribución más concentrada en valores medios de pobreza (10 a 25), con una ligera tendencia hacia los valores más bajos. Esto sugiere que las zonas urbanas de Boyacá tienen mejores condiciones de vida, aunque aún persisten diferencias significativas entre los municipios más desarrollados y los menos favorecidos dentro de las cabeceras.
+
+### **IPM CENTROS POBLADOS Y RURAL DISPERSO**
+
+```{r}
+# Crear el mapa coloreado por 'IPM Centros poblados y rural disperso'
+
+tm_shape(boyaca_municipios_ipm) +
+  tm_fill("IPM.Centros.poblados.y.rural.disperso", palette = "Greens", title = "% IPM CP y RD") +  # Colorear según IPM Centros Poblados
+  tm_borders() +
+  tm_layout(title = "Centros Poblados y Rural Disperso")
+```
+
+Las áreas más rurales y dispersas de Boyacá tienen los valores más altos de IPM, con muchos municipios que se encuentran en el rango de 40 a 60 e incluso 80 a 100 en algunas zonas del norte y este, también tenemos que el IPM más alto está asociado con zonas rurales más alejadas, donde el acceso a servicios como salud, educación y agua potable es más limitado.
+
+```{r}
+# Histograma de IPM en Centros Poblados y Rural Disperso
+ggplot(boyaca_municipios_ipm, aes(x = IPM.Centros.poblados.y.rural.disperso)) +
+  geom_histogram(binwidth = 5, fill = "lightgreen", color = "black", alpha = 0.7) +
+  labs(title = "Distribución del IPM en Centros Poblados y Rural Disperso de Boyacá",
+       x = "Índice de Pobreza Multidimensional (IPM) en Centros Poblados y Rural Disperso",
+       y = "Frecuencia") +
+  theme_minimal()
+
+
+```
+
+El histograma del IPM en Centros Poblados y Rural Disperso revela una concentración de municipios con un IPM alto, especialmente entre 40 y 60. Las áreas rurales de Boyacá muestran una distribución de pobreza más alta, lo que refleja las dificultades que enfrentan las zonas rurales en términos de acceso a servicios básicos, lo que contribuye a niveles más altos de pobreza multidimensional en comparación con las áreas urbanas.
+
+### Analisis del IPM:
+
+```{r}
+# Calcular los promedios de IPM Total, IPM Cabeceras y IPM Rural
+promedios <- boyaca_municipios_ipm %>%
+  summarise(
+    IPM_Total = mean(IPM.Municipal, na.rm = TRUE),
+    IPM_Cabeceras = mean(Cabeceras, na.rm = TRUE),
+    IPM_Rural = mean(IPM.Centros.poblados.y.rural.disperso, na.rm = TRUE)
+  )
+
+# Convertir los promedios a formato largo para graficarlos
+promedios_long <- data.frame(
+  Categoria = c("IPM Total", "IPM Cabeceras", "IPM Rural"),
+  Promedio = c(promedios$IPM_Total, promedios$IPM_Cabeceras, promedios$IPM_Rural)
+)
+
+# Crear gráfico de barras comparando los promedios
+ggplot(promedios_long, aes(x = Categoria, y = Promedio, fill = Categoria)) +
+  geom_bar(stat = "identity", color = "black") +  # Bar chart
+  scale_fill_manual(values = c("skyblue", "lightgreen", "lightcoral")) +  # Custom colors
+  labs(title = "Comparación del Promedio del IPM en Boyacá",
+       x = "Categoría",
+       y = "Promedio del IPM") +
+  theme_minimal() +
+  geom_text(aes(label = round(Promedio, 2)), vjust = -0.5)  # Agregar etiquetas con los promedios
+
+```
+
+El gráfico muestra claramente que en Boyacá existen grandes desigualdades en términos de pobreza multidimensional, con las zonas rurales enfrentando niveles significativamente más altos de pobreza **(IPM Rural: 44.71)** en comparación con las cabeceras municipales **(IPM Cabeceras: (18.91)**. Aunque las áreas urbanas tienen mejores condiciones, el **(IPM Total para el departamento: 38.13)** refleja que, a pesar de los avances en las zonas urbanas, la pobreza sigue siendo un desafío importante en todo el territorio. Estas disparidades subrayan la necesidad de políticas públicas enfocadas en mejorar las condiciones de vida en las áreas rurales.
+
+#### **Conclusiones generales del IPM:**
+
+-   Boyacá presenta una gran disparidad territorial en términos de pobreza multidimensional, con las zonas rurales y periféricas enfrentando mayores desafíos.
+
+<!-- -->
+
+-   Las cabeceras municipales muestran mejores condiciones, pero aún existen desigualdades internas dentro de ellas.
+
+<!-- -->
+
+-   Las áreas rurales dispersas requieren políticas públicas más focalizadas para reducir la pobreza y mejorar la calidad de vida a través del acceso a servicios básicos y la mejora de infraestructuras.
+
+## Índice de Desempeño Fiscal (IDF)
+
+```{r}
+#| include: false
+# Cargar la nueva base de datos del IDF
+idf_data_new <- read.csv('datos/Nuevo__ndice_de_Desempe_o_Fiscal__municipios_-_DEPARTAMENTO_DE_BOYAC__20250701.csv')
+
+# Verificar los primeros registros
+head(idf_data_new)
+```
+
+```{r}
+#| include: false
+
+# Cargar el archivo GeoJSON de los municipios de Boyacá
+boyaca_municipios_geojson <- st_read('datos/Boyaca.geojson')
+
+# Verificar las primeras filas
+head(boyaca_municipios_geojson)
+```
+
+```{r}
+#| include: false
+# Convertir la columna "Codigo_Municipio" a carácter en el IDF
+idf_data_new$Codigo_Municipio <- as.character(idf_data_new$Codigo_Municipio)
+
+# Verificar la conversión
+head(idf_data_new$Codigo_Municipio)
+```
+
+```{r}
+#| include: false
+# Eliminar puntos en ambas columnas
+idf_data_new$Codigo_Municipio <- gsub("\\.", "", idf_data_new$Codigo_Municipio)
+boyaca_municipios_geojson$mpios <- gsub("\\.", "", boyaca_municipios_geojson$mpios)
+
+# Verificar las primeras filas de las columnas
+head(idf_data_new$Codigo_Municipio)
+head(boyaca_municipios_geojson$mpios)
+```
+
+```{r}
+#| include: false
+# Unir los datos del IDF con el GeoJSON de Boyacá por "Codigo_Municipio"
+boyaca_municipios_idf <- left_join(boyaca_municipios_geojson, idf_data_new, by = c("mpios" = "Codigo_Municipio"))
+
+# Verificar la unión
+head(boyaca_municipios_idf)
+```
+
+```{r}
+#| include: false
+# Eliminar las filas correspondientes al año 2021 en el dataset idf_data_new
+idf_data_new <- idf_data_new %>%
+  filter(año != 2021)
+
+# Verificar que los datos del año 2021 han sido eliminados
+unique(idf_data_new$año)
+```
+
+El Índice de Desempeño Fiscal (IDF) es una herramienta que permite evaluar la gestión fiscal de los municipios, tomando en cuenta diversos factores que reflejan su capacidad de recaudar impuestos, gestionar los recursos públicos y mantener un nivel adecuado de solvencia fiscal. El IDF se utiliza para clasificar a los municipios en términos de su capacidad para manejar y administrar sus finanzas de manera eficiente.
+
+En este estudio, se presenta la distribución del Índice de Desempeño Fiscal (IDF) para los municipios de Boyacá durante el **año 2020**, con el objetivo de identificar patrones de desempeño fiscal en el departamento, y resaltar las áreas que requieren mayores esfuerzos de mejora.
+
+Los datos se pueden encontrar [*aquí*](https://www.datos.gov.co/Funci-n-p-blica/Nuevo-ndice-de-Desempe-o-Fiscal-municipios-DEPARTA/m7gv-v3kk/about_data)
+
+```{r}
+# Crear el mapa coroplético del IDF
+tm_shape(boyaca_municipios_idf) +
+  tm_fill("IDF_2020", palette = "RdYlGn", title = "Índice de Desempeño Fiscal 2020") + 
+  tm_borders() +
+  tm_layout(title = "Índice de Desempeño Fiscal")
+```
+
+Esta visualización revela importantes diferencias en la capacidad de los municipios para gestionar sus finanzas. Municipios en el sur y centro del departamento presentan buenos índices fiscales, reflejando una gestión adecuada de los recursos, mientras que algunos municipios en el norte muestran graves dificultades fiscales, lo que podría indicar limitaciones en su capacidad de recaudación o problemas en la gestión pública local.
+
+Este análisis es clave para diseñar políticas públicas dirigidas a mejorar la solvencia fiscal en los municipios con bajos índices, permitiendo mejorar la prestación de servicios como salud, educación e infraestructura en las áreas más vulnerables.
+
+```{r}
+# Filtrar los datos para excluir el año 2021
+boyaca_municipios_sin_2021 <- boyaca_municipios_idf %>%
+  filter(año != 2021)
+
+# Filtrar las categorías 'Detección y sin Información' y 'Sin Información'
+boyaca_municipios_sin_2021_filtrado <- boyaca_municipios_sin_2021 %>%
+  filter(Clasificacion != "Detección y sin Información, completa para el análisis" &
+         Clasificacion != "Sin Información, completa para el análisis")
+
+# Crear el gráfico de barras con los datos sin el año 2021 y sin las categorías excluidas
+ggplot(boyaca_municipios_sin_2021_filtrado, aes(x = Clasificacion)) +
+  geom_bar(fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(title = "Clasificación Fiscal de los Municipios de Boyacá (2020)",
+       x = "Clasificación Fiscal",
+       y = "Número de Municipios") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+La mayoría de los municipios se encuentran clasificados en la categoría "Riesgo", con un número significativo de municipios, lo que indica que estos municipios presentan dificultades fiscales importantes y podrían necesitar mejorar la gestión financiera para evitar problemas futuros.
+
+### Comparación entre IDF e IPM en Boyacá
+
+```{r}
+#| include: false
+# Renombrar la columna 'mpios' a 'Codigo_Municipio' en el IPM
+colnames(boyaca_municipios_ipm)[colnames(boyaca_municipios_ipm) == "mpios"] <- "Codigo_Municipio"
+
+# Unir los datos del IDF con los datos del IPM por "Codigo_Municipio"
+boyaca_municipios_idf_ipm <- left_join(idf_data_new, boyaca_municipios_ipm, by = "Codigo_Municipio")
+
+# Verificar la unión
+head(boyaca_municipios_idf_ipm)
+```
+
+```{r}
+
+ggplot(boyaca_municipios_idf_ipm, aes(x = IPM.Municipal, y = IDF_2020)) +
+  geom_point(color = "blue", alpha = 0.6) +
+  labs(title = "",
+       x = "Índice de Pobreza Multidimensional (IPM)",
+       y = "Índice de Desempeño Fiscal (IDF) 2020") +
+  theme_minimal()
+```
+
+#### **Análisis del gráfico**:
+
+-   **Relación débil**: No parece haber una relación clara entre el IDF y el IPM, ya que los puntos están distribuidos de manera aleatoria en el gráfico, sin una tendencia obvia. Es decir, no se observa una correlación fuerte entre el desempeño fiscal de los municipios y su nivel de pobreza multidimensional.
+
+-   **Variedad de municipios**: Los municipios con alto IDF no necesariamente tienen un IPM bajo, lo que podría indicar que algunos municipios con bajo índice de pobreza aún tienen un desempeño fiscal limitado. De igual manera, algunos municipios con alto IPM pueden tener un desempeño fiscal relativamente bueno.
+
+El gráfico sugiere que el desempeño fiscal de los municipios no está directamente vinculado con su nivel de pobreza, lo que puede indicar que otros factores (como la gestión de los recursos o las políticas fiscales locales) también influyen de manera importante en el desempeño fiscal de los municipios.
+
+## ¿A qué tanta distancia están los municipios de Boyacá de su capital?
+
+```{r}
+municipios <- st_read("datos/Boyaca.geojson", quiet = TRUE) %>%
+  st_transform(4326)
+
+centroides <- st_centroid(municipios)
+coords <- st_coordinates(centroides)
+
+municipios <- municipios %>%
+  mutate(lon = coords[,1], lat = coords[,2])
+
+coord_tunja <- municipios %>%
+  filter(str_to_upper(nombre_mpi) == "TUNJA") %>%
+  select(lon, lat) %>%
+  as.data.frame()
+
+municipios <- municipios %>%
+  mutate(
+    distancia_tunja_km = map_dbl(
+      1:n(),
+      ~ distHaversine(
+        c(lon[.x], lat[.x]),
+        c(coord_tunja$lon, coord_tunja$lat)
+      ) / 1000
+    )
+  )
+```
+
+```{r}
+tmap_mode("plot")
+tmap_options(component.autoscale = FALSE)
+
+tm_shape(municipios) +
+  tm_polygons(
+    col = "distancia_tunja_km",
+    palette = "YlOrRd",
+    style = "quantile",
+    title = "Distancia a Tunja (km)"
+  ) +
+  tm_borders(col = "white", lwd = 0.5) +
+  tm_shape(municipios %>% filter(str_to_upper(nombre_mpi) == "TUNJA")) +
+  tm_borders(col = "gray", lwd = 2) +
+  tm_fill(col = "gray") +
+  tm_text("TUNJA", size = 0.5, col = "black") +
+  tm_layout(
+    main.title = "Distancia geográfica desde cada municipio hasta Tunja",
+    main.title.size = 1.2,
+    main.title.position = "center",
+    legend.outside = TRUE,
+    legend.title.size = 1,
+    legend.text.size = 0.8,
+    frame = FALSE,
+    outer.margins = c(0.05, 0.05, 0.15, 0.05),
+    inner.margins = c(0.05, 0.05, 0.05, 0.05)
+  )
+```
+
+**Análisis de la distancia geográfica a la capital departamental**
+
+El mapa presentado ilustra la distancia geodésica en kilómetros desde cada municipio del departamento de Boyacá hasta su capital, Tunja. A través de una representación coroplética, se evidencian variaciones espaciales significativas: mientras que los municipios del centro y el eje tunjano presentan proximidad territorial a la capital, aquellos ubicados en los extremos oriental y occidental exhiben distancias considerablemente mayores.
+
+Esta variable permite observar patrones de accesibilidad territorial que pueden influir en la distribución de servicios, inversiones, presencia institucional y calidad de vida. En zonas rurales o más alejadas, estas distancias físicas pueden traducirse en barreras para el acceso a educación superior, salud especializada o programas gubernamentales. Por tanto, el análisis geográfico no solo es descriptivo, sino que ofrece insumos estratégicos para la planificación regional y la descentralización efectiva de políticas públicas.
+
+## Referencias
+
+1.  Mapas para Colorear. (s.f.). *Mapa del Departamento de Boyacá*. Recuperado de <https://www.mapasparacolorear.com/colombia/mapa-departamento-boyaca.php>
+
+2.  Departamento Administrativo Nacional de Estadística (DANE). (2024). *Índice de Pobreza Multidimensional por municipio (Censo Nacional de Población y Vivienda 2018)*. Recuperado de <https://microdatos.dane.gov.co/index.php/catalog/860/get-microdata>
+
+3.  Ministerio de Hacienda y Crédito Público. (2020). *Índice de Desempeño Fiscal*. Recuperado de <https://www.datos.gov.co/>
+
+4.  Laboratorio Urbano Bogotá. (s.f.). *Shapefile municipios de Boyacá en formato GeoJSON*. Recuperado de <https://bogota-laburbano.opendatasoft.com/explore/dataset/shapes/>
+
+5.  R Core Team. (2024). *R: A language and environment for statistical computing*. R Foundation for Statistical Computing, Vienna, Austria. Recuperado de <https://www.R-project.org/>
+
+6.  Wickham, H., et al. (2019). Welcome to the Tidyverse. *Journal of Open Source Software, 4*(43), 1686.
+
+7.  Pebesma, E. (2018). Simple Features for R: Standardized Support for Spatial Vector Data. *The R Journal, 10*(1), 439–446.
+
+#### ***Nota sobre uso de IA**:*
+
+Parte del contenido fue revisado, estructurado y redactado con el apoyo de inteligencia artificial (ChatGPT) para garantizar coherencia técnica, ortográfica y metodológica, respetando siempre la autoría y responsabilidad académica del equipo de trabajo.
