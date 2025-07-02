@@ -16,6 +16,7 @@ date-format: long
 format: 
   html:
     self_contained: true
+    embed-resources: true
 editor: source
 execute: 
   echo: false
