@@ -121,8 +121,6 @@ El **I**PM en Boyacá se divide en tres grandes categorías:
 
 -   **Centros Poblados y Rural Disperso**: Considera las zonas rurales del departamento, que suelen enfrentar mayores desafíos en términos de acceso a servicios y calidad de vida
 
-A continuación una visualización
-
 ```{r}
 #| message: false
 #| include: false
@@ -169,7 +167,7 @@ ggplot(boyaca_municipios_ipm, aes(x = IPM.Municipal)) +
 
 El histograma muestra una distribución relativamente equilibrada de los municipios de Boyacá, con picos que reflejan valores de pobreza media (30 a 40) y una pequeña cantidad de municipios con valores más bajos o más altos. Esto indica que gran parte de los municipios en Boyacá tienen un nivel de pobreza multidimensional moderado, con algunas zonas en los extremos con mayores y menores niveles de pobreza.
 
-### **IPM CABECERAS**
+### IPM CABECERAS
 
 ```{r}
 # Crear el mapa coloreado por 'IPM Cabeceras' (para tmap v3)
@@ -194,7 +192,7 @@ ggplot(boyaca_municipios_ipm, aes(x = Cabeceras)) +
 
 Se muestra una distribución más concentrada en valores medios de pobreza (10 a 25), con una ligera tendencia hacia los valores más bajos. Esto sugiere que las zonas urbanas de Boyacá tienen mejores condiciones de vida, aunque aún persisten diferencias significativas entre los municipios más desarrollados y los menos favorecidos dentro de las cabeceras.
 
-### **IPM CENTROS POBLADOS Y RURAL DISPERSO**
+### IPM CENTROS POBLADOS Y RURAL DISPERSO
 
 ```{r}
 # Crear el mapa coloreado por 'IPM Centros poblados y rural disperso'
@@ -252,7 +250,7 @@ ggplot(promedios_long, aes(x = Categoria, y = Promedio, fill = Categoria)) +
 
 El gráfico muestra claramente que en Boyacá existen grandes desigualdades en términos de pobreza multidimensional, con las zonas rurales enfrentando niveles significativamente más altos de pobreza **(IPM Rural: 44.71)** en comparación con las cabeceras municipales **(IPM Cabeceras: (18.91)**. Aunque las áreas urbanas tienen mejores condiciones, el **(IPM Total para el departamento: 38.13)** refleja que, a pesar de los avances en las zonas urbanas, la pobreza sigue siendo un desafío importante en todo el territorio. Estas disparidades subrayan la necesidad de políticas públicas enfocadas en mejorar las condiciones de vida en las áreas rurales.
 
-#### **Conclusiones generales del IPM:**
+### Conclusiones generales del IPM:
 
 -   Boyacá presenta una gran disparidad territorial en términos de pobreza multidimensional, con las zonas rurales y periféricas enfrentando mayores desafíos.
 
@@ -389,7 +387,7 @@ ggplot(boyaca_municipios_idf_ipm, aes(x = IPM.Municipal, y = IDF_2020)) +
   theme_minimal()
 ```
 
-#### **Análisis del gráfico**:
+### Análisis del gráfico:
 
 -   **Relación débil**: No parece haber una relación clara entre el IDF y el IPM, ya que los puntos están distribuidos de manera aleatoria en el gráfico, sin una tendencia obvia. Es decir, no se observa una correlación fuerte entre el desempeño fiscal de los municipios y su nivel de pobreza multidimensional.
 
@@ -455,13 +453,13 @@ tm_shape(municipios) +
   )
 ```
 
-**Análisis de la distancia geográfica a la capital departamental**
+### Análisis de la distancia geográfica a la capital departamental
 
 El mapa presentado ilustra la distancia geodésica en kilómetros desde cada municipio del departamento de Boyacá hasta su capital, Tunja. A través de una representación coroplética, se evidencian variaciones espaciales significativas: mientras que los municipios del centro y el eje tunjano presentan proximidad territorial a la capital, aquellos ubicados en los extremos oriental y occidental exhiben distancias considerablemente mayores.
 
 Esta variable permite observar patrones de accesibilidad territorial que pueden influir en la distribución de servicios, inversiones, presencia institucional y calidad de vida. En zonas rurales o más alejadas, estas distancias físicas pueden traducirse en barreras para el acceso a educación superior, salud especializada o programas gubernamentales. Por tanto, el análisis geográfico no solo es descriptivo, sino que ofrece insumos estratégicos para la planificación regional y la descentralización efectiva de políticas públicas.
 
-## Interpretación de los resultados
+### Interpretación de los resultados
 
 El análisis geoespacial de los municipios de Boyacá evidencia marcadas desigualdades territoriales que reflejan las brechas estructurales persistentes en el departamento. En cuanto al Índice de Pobreza Multidimensional (IPM), se identifican niveles significativamente más altos en zonas rurales dispersas, especialmente al norte y oriente del territorio, mientras que las cabeceras municipales presentan mejores condiciones, aunque no exentas de heterogeneidad interna.
 
@@ -469,29 +467,29 @@ El Índice de Desempeño Fiscal (IDF), por su parte, muestra una mayor concentra
 
 Respecto a la distancia geográfica a Tunja, se constata que los municipios más alejados tienden a coincidir con mayores niveles de pobreza y menor desempeño fiscal. Esta relación no es estrictamente causal, pero sí indica un patrón territorial donde el acceso físico a la capital puede condicionar las oportunidades institucionales, administrativas y de inversión pública.
 
-## Conclusiones
+### Conclusiones
 
--    Boyacá presenta disparidades espaciales relevantes en pobreza, desempeño fiscal y accesibilidad territorial.
+-   Boyacá presenta disparidades espaciales relevantes en pobreza, desempeño fiscal y accesibilidad territorial.
 
--    Las zonas rurales y periféricas enfrentan los mayores retos en términos de condiciones de vida y gestión institucional.
+-   Las zonas rurales y periféricas enfrentan los mayores retos en términos de condiciones de vida y gestión institucional.
 
--    Las cabeceras municipales concentran mejores indicadores, pero requieren intervenciones diferenciadas para cerrar brechas internas.
+-   Las cabeceras municipales concentran mejores indicadores, pero requieren intervenciones diferenciadas para cerrar brechas internas.
 
--    No se evidenció una relación lineal entre IDF e IPM, lo que sugiere que el buen manejo financiero municipal no garantiza por sí solo mejores condiciones sociales.
+-   No se evidenció una relación lineal entre IDF e IPM, lo que sugiere que el buen manejo financiero municipal no garantiza por sí solo mejores condiciones sociales.
 
--    La distancia geográfica a Tunja actúa como proxy indirecto de accesibilidad a recursos y servicios, afectando especialmente a municipios más aislados.
+-   La distancia geográfica a Tunja actúa como proxy indirecto de accesibilidad a recursos y servicios, afectando especialmente a municipios más aislados.
 
-## Recomendaciones
+### Recomendaciones
 
--    Diseñar estrategias de política pública que reconozcan la heterogeneidad territorial de Boyacá, con enfoques diferenciados según el perfil geoespacial de los municipios.
+-   Diseñar estrategias de política pública que reconozcan la heterogeneidad territorial de Boyacá, con enfoques diferenciados según el perfil geoespacial de los municipios.
 
--    Fortalecer la capacidad institucional de municipios con bajo desempeño fiscal a través de asistencia técnica, auditorías preventivas y modernización administrativa.
+-   Fortalecer la capacidad institucional de municipios con bajo desempeño fiscal a través de asistencia técnica, auditorías preventivas y modernización administrativa.
 
--    Enfocar inversiones sociales y de infraestructura en zonas rurales dispersas, priorizando indicadores de acceso básico (educación, salud, conectividad vial).
+-   Enfocar inversiones sociales y de infraestructura en zonas rurales dispersas, priorizando indicadores de acceso básico (educación, salud, conectividad vial).
 
--    Incorporar análisis geoespacial en los procesos de planificación territorial del departamento y en la asignación presupuestal sectorial.
+-   Incorporar análisis geoespacial en los procesos de planificación territorial del departamento y en la asignación presupuestal sectorial.
 
--    Promover investigaciones adicionales que integren otras dimensiones como el capital humano, productividad local o indicadores ambientales, para complementar el análisis territorial integral.
+-   Promover investigaciones adicionales que integren otras dimensiones como el capital humano, productividad local o indicadores ambientales, para complementar el análisis territorial integral.
 
 ## Referencias
 
